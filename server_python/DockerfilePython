@@ -1,7 +1,7 @@
 FROM python:3.9
 WORKDIR /server_python
 
-COPY ./server_python/requirements.txt /server_python/requirements.txt
+COPY ./requirements.txt ./requirements.txt
 
 RUN pip install -r requirements.txt
 
