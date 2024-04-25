@@ -2,6 +2,5 @@ node_modules
 build
 .dockerignore
 Dockerfile
-/server/DockerfileNodejs
 DockerfileReact
-/server/node_modules
+/node-server/node_modules
