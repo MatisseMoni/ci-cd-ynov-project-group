@@ -4,3 +4,4 @@ node_modules/
 
 # Ignore les dossiers node_modules dans tous les sous-dossiers
 **/node_modules/
+**/__pycache__/
