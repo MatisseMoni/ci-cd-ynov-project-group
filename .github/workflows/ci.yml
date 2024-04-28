@@ -19,8 +19,9 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      run: npm i --save-dev jest-mock-axios
       working-directory: ./app
 
     - name: Run tests
-      run: npm test
+      run: npm test -- --coverage --no-cache
       working-directory: ./app
