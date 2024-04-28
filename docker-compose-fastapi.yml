@@ -31,19 +31,22 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - PASS_SERVER=${PASS_SERVER}
     depends_on:
       - db
-#  react:
-#    image: react
-#    build:
-#      context: ./app
-#      dockerfile: ./DockerfileReact
-#    ports:
-#      - 3000:3000
-#    environment:
-#      <<: *common-variables
-#    volumes:
-#      - ./app:/app
-#      - /app/node_modules
-#    depends_on:
-#      - server_python
+  react:
+    restart: always
+    image: react
+    container_name: react
+    build:
+      context: ./app
+      dockerfile: ./DockerfileReact
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_API_URL=${SERVER_PYTHON_URI}
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+    depends_on:
+      - server_python

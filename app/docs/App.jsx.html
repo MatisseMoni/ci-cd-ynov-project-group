@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: App.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: App.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+* Ce composant représente le formulaire d'inscription.
+* @function App
+* @returns {JSX.Element} Le formulaire d'inscription
+*/
+
+import './App.css';
+import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import validateForm from './validateForm';
+
+function App() {
+  /** État initial pour les champs du formulaire et les messages d'erreur */
+  const [formData, setFormData] = useState({
+    nom: '',
+    prenom: '',
+    email: '',
+    dateNaissance: '',
+    ville: '',
+    codePostal: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  /** Gestion des changements des champs du formulaire */
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+
+
+  /** Gestion de la soumission du formulaire */
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      localStorage.setItem('user', JSON.stringify(formData));
+      toast.success("Inscription réussie !");
+      setFormData({
+        nom: '',
+        prenom: '',
+        email: '',
+        dateNaissance: '',
+        ville: '',
+        codePostal: ''
+      });
+    } else {
+      toast.error("Des erreurs sont présentes dans le formulaire.");
+    }
+  };
+
+  /** Validation des champs ici */
+  useEffect(() => { 
+    const v = validateForm(formData);
+    setIsFormValid(v.formIsValid);
+    setErrors(v.newErrors);
+  }, [formData]);
+
+  /** Affichage du formulaire */
+  return (
+    &lt;div>
+      &lt;form data-testid="form" onSubmit={handleSubmit}>
+        &lt;div data-testid="divNom">
+          &lt;label data-testid='labelNom'>Nom:&lt;/label>
+          &lt;input
+            data-testid="inputNom"
+            type="text"
+            name="nom"
+            value={formData.nom}
+            onChange={handleChange}
+            required
+          />
+          {errors.nom &amp;&amp; &lt;p className='error'>{errors.nom}&lt;/p>}
+        &lt;/div>
+        &lt;div data-testid="divPrenom" >
+          &lt;label data-testid='labelPrenom'>Prénom:&lt;/label>
+          &lt;input
+            data-testid="inputPrenom"
+            type="text"
+            name="prenom"
+            value={formData.prenom}
+            onChange={handleChange}
+            required
+          />
+          {errors.prenom &amp;&amp; &lt;p className='error'>{errors.prenom}&lt;/p>}
+        &lt;/div>
+        &lt;div data-testid="divEmail">
+          &lt;label data-testid='labelEmail'>Email:&lt;/label>
+          &lt;input
+            data-testid="inputEmail"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          {errors.email &amp;&amp; &lt;p className='error'>{errors.email}&lt;/p>}
+        &lt;/div>
+        &lt;div data-testid="divDate">
+          &lt;label data-testid='labelDate'>Date de naissance:&lt;/label>
+          &lt;input
+            data-testid="inputDate"
+            type="date"
+            name="dateNaissance"
+            value={formData.dateNaissance}
+            onChange={handleChange}
+            required
+          />
+          {errors.dateNaissance &amp;&amp; &lt;p className='error'>{errors.dateNaissance}&lt;/p>}
+        &lt;/div>
+        &lt;div data-testid="divVille">
+          &lt;label data-testid='labelVille'>Ville:&lt;/label>
+          &lt;input
+            data-testid="inputVille"
+            type="text"
+            name="ville"
+            value={formData.ville}
+            onChange={handleChange}
+            required
+          />
+          {errors.ville &amp;&amp; &lt;p className='error'>{errors.ville}&lt;/p>}
+        &lt;/div>
+        &lt;div id='inputZip' data-testid="divZip">
+          &lt;label data-testid='labelZip'>Code Postal:&lt;/label>
+          &lt;input
+            data-testid="inputZip"
+            type="text"
+            name="codePostal"
+            pattern="\d{5}"
+            value={formData.codePostal}
+            onChange={handleChange}
+            required
+          />
+          {errors.codePostal &amp;&amp; &lt;p className='error'>{errors.codePostal}&lt;/p>}
+        &lt;/div>
+        &lt;button type="submit" disabled={!isFormValid}>Sauvegarder&lt;/button>
+      &lt;/form>
+      &lt;ToastContainer />
+    &lt;/div>
+  );
+}
+
+export default App;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#getAge">getAge</a></li><li><a href="global.html#validateForm">validateForm</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Feb 10 2024 11:04:34 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

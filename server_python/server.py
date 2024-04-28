@@ -1,5 +1,6 @@
 from os import getenv
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 import mysql.connector
@@ -13,13 +14,8 @@ class User(BaseModel):
     prenom: str
     email: str
     date_naissance: date
-    pays: str
     ville: str
     code_postal: str
-    nombre_achat: int
-
-class UserInDB(User):
-    id: int
 
 # Configuration de la base de données
 db_config = {
@@ -35,8 +31,18 @@ print(db_config)
 def get_db_connection():
     return mysql.connector.connect(**db_config)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Autorise toutes les origines
+    allow_credentials=True,
+    allow_methods=["*"],  # Autorise toutes les méthodes
+    allow_headers=["*"],  # Autorise tous les headers
+)
+
 @app.get("/users")
-def read_users():
+def read_users(password: Optional[str] = None, admin: bool = False):
+    if (getenv('PASS_SERVER') != password) and not admin:
+        raise HTTPException(status_code=401, detail="Unauthorized")
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM utilisateur")
@@ -61,29 +67,17 @@ def read_user(user_id: int):
 def create_user(user: User):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO utilisateur (nom, prenom, email, date_naissance, pays, ville, code_postal, nombre_achat) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (user.nom, user.prenom, user.email, user.date_naissance, user.pays, user.ville, user.code_postal, user.nombre_achat))
+    cursor.execute("INSERT INTO utilisateur (nom, prenom, email, date_naissance, ville, code_postal) VALUES (%s, %s, %s, %s, %s, %s)", (user.nom, user.prenom, user.email, user.date_naissance, user.ville, user.code_postal))
     conn.commit()
     new_id = cursor.lastrowid
     cursor.close()
     conn.close()
-    return {"id": new_id, "nom": user.nom, "prenom": user.prenom, "email": user.email, "date_naissance": user.date_naissance, "pays": user.pays, "ville": user.ville, "code_postal": user.code_postal, "nombre_achat": user.nombre_achat}
-
-@app.put("/users/{user_id}")
-def update_user(user_id: int, user: User):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("UPDATE utilisateur SET nom = %s, prenom = %s, email = %s, date_naissance = %s, pays = %s, ville = %s, code_postal = %s, nombre_achat = %s WHERE id = %s", (user.nom, user.prenom, user.email, user.date_naissance, user.pays, user.ville, user.code_postal, user.nombre_achat, user_id))
-    conn.commit()
-    if cursor.rowcount == 0:
-        cursor.close()
-        conn.close()
-        raise HTTPException(status_code=404, detail="User not found")
-    cursor.close()
-    conn.close()
-    return {"id": user_id, "nom": user.nom, "prenom": user.prenom, "email": user.email, "date_naissance": user.date_naissance, "pays": user.pays, "ville": user.ville, "code_postal": user.code_postal, "nombre_achat": user.nombre_achat}
+    return {"id": new_id, "nom": user.nom, "prenom": user.prenom, "email": user.email, "date_naissance": user.date_naissance, "ville": user.ville, "code_postal": user.code_postal}
 
 @app.delete("/users/{user_id}")
-def delete_user(user_id: int):
+def delete_user(user_id: int, password: Optional[str] = None, admin: bool = False):
+    if (getenv('PASS_SERVER') != password) and not admin:
+        raise HTTPException(status_code=401, detail="Unauthorized")
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM utilisateur WHERE id = %s", (user_id,))
