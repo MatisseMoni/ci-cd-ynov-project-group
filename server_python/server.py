@@ -41,7 +41,7 @@ app.add_middleware(
 
 @app.get("/users")
 def read_users(password: Optional[str] = None, admin: bool = False):
-    if (getenv('PASS_SERVER') != password) and not admin:
+    if (getenv('ADMIN_PASS') != password) and not admin:
         raise HTTPException(status_code=401, detail="Unauthorized")
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -76,7 +76,7 @@ def create_user(user: User):
 
 @app.delete("/users/{user_id}")
 def delete_user(user_id: int, password: Optional[str] = None, admin: bool = False):
-    if (getenv('PASS_SERVER') != password) and not admin:
+    if (getenv('ADMIN_PASS') != password) and not admin:
         raise HTTPException(status_code=401, detail="Unauthorized")
     conn = get_db_connection()
     cursor = conn.cursor()
