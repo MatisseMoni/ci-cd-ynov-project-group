@@ -24,6 +24,7 @@ function App() {
   const [formData, setFormData] = useState(userInit);
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const [users, setUsers] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,6 +70,11 @@ function App() {
         headers: { password: "admin" },
       });
       console.log(response);
+      if (response.status === 200) {
+        setUsers(response.data);
+      } else {
+        toast.error("Erreur lors de la récupération des utilisateurs.");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -80,14 +86,54 @@ function App() {
         headers: { admin: true },
       });
       console.log(response);
+      if (response.status === 200) {
+        setUsers(response.data);
+      } else {
+        toast.error("Erreur lors de la récupération des utilisateurs.");
+      }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  const deleteUsers = async (id) => {
+    try {
+      const response = await axios.delete(`${REACT_APP_API_URL}/users/${id}`, {
+        headers: { password: "admin" },
+      });
+      console.log(response);
+      if (response.status === 200) {
+        toast.success("Utilisateur supprimé avec succès.");
+        setUsers(users.filter((user) => user._id !== id));
+      } else {
+        toast.error("Erreur lors de la suppression de l'utilisateur.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
-      <button onClick={getListsUsersByPassword}>Get Lists Users By Password</button>
+      <button onClick={getListsUsersByPassword}>
+        Get Lists Users By Password
+      </button>
       <button onClick={getUsersByAdminRole}>Get Users By Admin Role</button>
+      {users.length > 0 && (
+        <div>
+          <h2>Utilisateurs</h2>
+          <ul>
+            {users.map((user) => (
+              <li key={user._id}>
+                <p>
+                  {user.nom} {user.prenom} - {user.email}
+                </p>
+                <button onClick={() => deleteUsers(user._id)}>Supprimer</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <form data-testid="form" onSubmit={handleSubmit}>
         <div data-testid="divNom">
           <label data-testid="labelNom">Nom:</label>

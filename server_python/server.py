@@ -59,7 +59,7 @@ def read_users(dependencies=[Depends(verify_admin)]):
 def read_user(user_id: int):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM utilisateurs WHERE id = %s", (user_id,))
+    cursor.execute("SELECT * FROM utilisateurs WHERE _id = %s", (user_id,))
     user = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -76,13 +76,13 @@ def create_user(user: User):
     new_id = cursor.lastrowid
     cursor.close()
     conn.close()
-    return {"id": new_id, "nom": user.nom, "prenom": user.prenom, "email": user.email, "date_naissance": user.date_naissance, "ville": user.ville, "code_postal": user.code_postal}
+    return {"_id": new_id, "nom": user.nom, "prenom": user.prenom, "email": user.email, "date_naissance": user.date_naissance, "ville": user.ville, "code_postal": user.code_postal}
 
 @router.delete("/users/{user_id}")
 def delete_user(user_id: int, dependencies=[Depends(verify_admin)]):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM utilisateurs WHERE id = %s", (user_id,))
+    cursor.execute("DELETE FROM utilisateurs WHERE _id = %s", (user_id,))
     conn.commit()
     if cursor.rowcount == 0:
         cursor.close()
