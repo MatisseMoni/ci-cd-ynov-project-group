@@ -26,5 +26,5 @@ jobs:
       working-directory: ./app
 
     - name: Run tests
-      run: npm test -- --coverage --no-cache
+      run: npm test --no-cache
       working-directory: ./app
