@@ -8,7 +8,6 @@ from datetime import date
 
 app = FastAPI()
 
-# Modèle Pydantic pour les données utilisateur
 class User(BaseModel):
     nom: str
     prenom: str
@@ -17,7 +16,6 @@ class User(BaseModel):
     ville: str
     code_postal: str
 
-# Configuration de la base de données
 db_config = {
     'user': getenv('MYSQL_USER'),
     'password': getenv('MYSQL_ROOT_PASSWORD'),
@@ -27,16 +25,15 @@ db_config = {
 
 print(db_config)
 
-# Fonction pour obtenir une connexion
 def get_db_connection():
     return mysql.connector.connect(**db_config)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Autorise toutes les origines
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Autorise toutes les méthodes
-    allow_headers=["*"],  # Autorise tous les headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/users")
