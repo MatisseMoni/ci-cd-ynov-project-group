@@ -1,10 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
+
+app.use(cors({
+  origin: ["*"],
+  methods: ['*'],     // Autoriser seulement ces méthodes
+  allowedHeaders: ["*"],  // Autoriser seulement ces en-têtes
+  credentials: true,            // Autoriser les cookies cross-origin
+  optionsSuccessStatus: 200     // Réponse pour les requêtes OPTIONS
+}));
 
 // Connexion à MongoDB
 console.log(process.env.SERVER_MONGO_URI);
@@ -69,6 +79,7 @@ app.get('/users/:user_id', async (req, res) => {
 
 app.post('/users', async (req, res) => {
   try {
+    console.log(req.body);
     const newUser = new User(req.body);
     const user = await newUser.save();
     res.send(user);
