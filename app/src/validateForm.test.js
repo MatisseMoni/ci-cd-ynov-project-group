@@ -8,9 +8,9 @@ describe('validateForm', () => {
             nom: 'Toto',
             prenom: 'Toto',
             email: 'toto@toto.com',
-            dateNaissance: '01/01/2000',
+            date_naissance: '01/01/2000',
             ville: 'Nice',
-            codePostal: '06000'
+            code_postal: '06000'
         };
     });
 
@@ -113,29 +113,29 @@ describe('validateForm', () => {
 
     describe('date de naissance', () => {
         it('valide que la date de naissance est renseignée', () => {
-            formData['dateNaissance'] = '01/01/2000';
+            formData['date_naissance'] = '01/01/2000';
             const result = validateForm(formData);
-            expect(result.newErrors.dateNaissance).toBeUndefined();
+            expect(result.newErrors.date_naissance).toBeUndefined();
             expect(result.formIsValid).toBeTruthy();
         });
         it('valide que l\'utilisateur a au moins 18 ans', () => {
-            formData['dateNaissance'] = '01/01/2010';
+            formData['date_naissance'] = '01/01/2010';
             const result = validateForm(formData);
-            expect(result.newErrors.dateNaissance).toBeDefined();
+            expect(result.newErrors.date_naissance).toBeDefined();
             expect(result.formIsValid).toBeFalsy();
         });
 
         it('valide que la date accepte plusieurs formats', () => {
-            formData['dateNaissance'] = '01-01-2000';
+            formData['date_naissance'] = '01-01-2000';
             const result = validateForm(formData);
-            expect(result.newErrors.dateNaissance).toBeUndefined();
+            expect(result.newErrors.date_naissance).toBeUndefined();
             expect(result.formIsValid).toBeTruthy();
         });
 
         it('retourne une erreur si la date de naissance n’est pas renseignée', () => {
-            formData['dateNaissance'] = '';
+            formData['date_naissance'] = '';
             const result = validateForm(formData);
-            expect(result.newErrors.dateNaissance).toBeDefined();
+            expect(result.newErrors.date_naissance).toBeDefined();
             expect(result.formIsValid).toBeFalsy();
         });
     });
@@ -158,36 +158,36 @@ describe('validateForm', () => {
 
     describe('code postal', () => {
         it('valide que le code postal est renseigné', () => {
-            formData['codePostal'] = '06000';
+            formData['code_postal'] = '06000';
             const result = validateForm(formData);
-            expect(result.newErrors.codePostal).toBeUndefined();
+            expect(result.newErrors.code_postal).toBeUndefined();
             expect(result.formIsValid).toBeTruthy();
         });
         it('valide le format du code postal : 0600', () => {
-            formData['codePostal'] = '0600';
+            formData['code_postal'] = '0600';
             const result = validateForm(formData);
-            expect(result.newErrors.codePostal).toBeDefined();
+            expect(result.newErrors.code_postal).toBeDefined();
             expect(result.formIsValid).toBeFalsy();
         });
 
         it('valide le format du code postal : 060000', () => {
-            formData['codePostal'] = '060000';
+            formData['code_postal'] = '060000';
             const result = validateForm(formData);
-            expect(result.newErrors.codePostal).toBeDefined();
+            expect(result.newErrors.code_postal).toBeDefined();
             expect(result.formIsValid).toBeFalsy();
         });
 
         it('valide le format du code postal : 0600A', () => {
-            formData['codePostal'] = '0600A';
+            formData['code_postal'] = '0600A';
             const result = validateForm(formData);
-            expect(result.newErrors.codePostal).toBeDefined();
+            expect(result.newErrors.code_postal).toBeDefined();
             expect(result.formIsValid).toBeFalsy();
         });
 
         it('retourne une erreur si le code postal n’est pas renseigné', () => {
-            formData['codePostal'] = '';
+            formData['code_postal'] = '';
             const result = validateForm(formData);
-            expect(result.newErrors.codePostal).toBeDefined();
+            expect(result.newErrors.code_postal).toBeDefined();
             expect(result.formIsValid).toBeFalsy();
         });
     });
