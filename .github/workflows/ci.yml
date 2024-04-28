@@ -19,6 +19,9 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./app
+
+    - name: debug
       run: npm i --save-dev jest-mock-axios
       working-directory: ./app
 
