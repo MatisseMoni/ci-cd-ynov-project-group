@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import validateForm from "./validateForm";
 import axios from "axios";
+//import MockAdapter from 'axios-mock-adapter';
 const { REACT_APP_API_URL } = process.env;
 
 function App() {

@@ -5,8 +5,10 @@ import {
   fireEvent,
   waitFor,
 } from "@testing-library/react";
+//jest.mock('axios');
 import App from "./App";
 import "@testing-library/jest-dom";
+
 
 describe("App", () => {
   let formData;
@@ -173,7 +175,7 @@ describe("App", () => {
         expect(error).toBeInTheDocument();
       });
     });
-    
+
     describe("dateNaissance", () => {
       test("renders the input", () => {
         render(<App />);
@@ -326,3 +328,120 @@ describe("App", () => {
     });
   });
 });
+
+// import axios from 'axios';
+// import { act } from 'react-dom/test-utils';
+
+// import mockAxios from 'jest-mock-axios';
+// import validateForm, { getAge } from './validateForm';
+
+// const { REACT_APP_API_URL } = process.env;
+
+
+// afterEach(() => {
+//   mockAxios.reset();
+// });
+
+// describe('handleSubmit', () => {
+//   it('submits form data and handles the response', async () => {
+//     const { getByTestId } = render(<App />);
+
+//     const formData = {
+//       nom: "Toto",
+//       prenom: "Toto",
+//       email: "toto#toto.com",
+//       dateNaissance: "2000-01-01",
+//       ville: "Nice",
+//       codePostal: "06000",
+//     };
+
+
+//     // Mock validateForm to always return true
+//     const validateForm = jest.fn(() => true);
+//     const form = screen.getByTestId("form");
+//     const inputNom = within(form).getByTestId("inputNom");
+//     const inputPrenom = within(form).getByTestId("inputPrenom");
+//     const inputEmail = within(form).getByTestId("inputEmail");
+//     const inputDate = within(form).getByTestId("inputDate");
+//     const inputVille = within(form).getByTestId("inputVille");
+//     const inputZip = within(form).getByTestId("inputZip");
+//     fireEvent.change(inputNom, { target: { value: formData.nom } });
+//     fireEvent.change(inputPrenom, { target: { value: formData.prenom } });
+//     fireEvent.change(inputEmail, { target: { value: formData.email } });
+//     fireEvent.change(inputDate, {
+//       target: { value: formData.dateNaissance },
+//     });
+//     fireEvent.change(inputVille, { target: { value: formData.ville } });
+//     fireEvent.change(inputZip, { target: { value: formData.codePostal } });
+//     const buttonForm = within(form).getByRole("button");
+//     // setTimeout(() => {
+//     //   expect(buttonForm).toBeEnabled();
+//     // }, 500);
+//     fireEvent.submit(form)
+
+//     //expect(validateForm).toHaveBeenCalled();
+
+//     // Check if API call is made with correct data
+//     // expect(mockAxios.post).toHaveBeenCalledWith(
+//     //   //`${REACT_APP_API_URL}/users`,
+//     //   'http://localhost:8000/users',
+//     //   formData
+//     // );
+//     await waitFor(() => {
+//       // Check if API call is made with correct data
+//       expect(mockAxios.post).toHaveBeenCalledWith(
+//         'http://localhost:8000/users',
+//         formData
+//       );
+//     });
+
+//     // Simulate a successful response
+//     await act(async () => {
+//       mockAxios.mockResponse({
+//         status: 201
+//       });
+//     });
+
+//     // Test the behavior after API call
+//     await waitFor(() => {
+//       expect(mockAxios.post).toHaveBeenCalledTimes(1);
+//       // Assume toast is a function or object with methods that have been mocked
+//       expect(toast.success).toHaveBeenCalledWith("Inscription réussie !");
+//     });
+//     setTimeout(() => {
+//       expect(screen.getByText("Inscription réussie !")).toBeInTheDocument();
+//       expect(inputNom.value).toBe("");
+//       expect(inputPrenom.value).toBe("");
+//       expect(inputEmail.value).toBe("");
+//       expect(inputDate.value).toBe("");
+//       expect(inputVille.value).toBe("");
+//       expect(inputZip.value).toBe("");
+
+//       // get localStorage
+//       const user = JSON.parse(localStorage.getItem("user"));
+//       expect(user).toEqual(formData);
+//     }, 500);
+//   });
+
+//   it('handles API errors correctly', async () => {
+//     const { getByTestId } = render(<App />);
+//     const form = screen.getByTestId("form");
+//     const validateForm = jest.fn(() => true);
+//     App.prototype.validateForm = validateForm;
+
+//     fireEvent.submit(form)
+
+//     //expect(validateForm).toHaveBeenCalled();
+
+//     // Simulate a failure response
+//     await act(async () => {
+//       mockAxios.mockError({
+//         status: 400
+//       });
+//     });
+
+//     await waitFor(() => {
+//       expect(toast.error).toHaveBeenCalledWith("Erreur lors de l'inscription.");
+//     });
+//   });
+// });
