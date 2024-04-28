@@ -31,10 +31,8 @@ const userSchema = new mongoose.Schema({
   code_postal: { type: String, maxlength: 5 }
 });
 
-// Modèle Mongoose pour les utilisateurs
 const User = mongoose.model('utilisateurs', userSchema);
 
-// Middleware pour authentifier
 const authenticate = (req, res, next) => {
   const { password, admin } = req.query;
   if ((process.env.ADMIN_PASS !== password) && !admin) {
@@ -43,7 +41,6 @@ const authenticate = (req, res, next) => {
   next();
 };
 
-// Lire tous les utilisateurs
 app.get('/users', /* authenticate, */ async (req, res) => {
   try {
     const users = await User.find({}).exec();
@@ -57,7 +54,6 @@ app.get('/users', /* authenticate, */ async (req, res) => {
   }
 });
 
-// Lire un utilisateur spécifique
 app.get('/users/:user_id', async (req, res) => {
   try {
     const user = await User.findById(req.params.user_id).exec();
@@ -71,7 +67,6 @@ app.get('/users/:user_id', async (req, res) => {
 });
 
 
-// Créer un utilisateur
 app.post('/users', async (req, res) => {
   try {
     const newUser = new User(req.body);
@@ -82,7 +77,6 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// Supprimer un utilisateur
 app.delete('/users/:user_id', authenticate, async (req, res) => {
   try {
     const result = await User.findByIdAndRemove(req.params.user_id).exec();
@@ -95,7 +89,6 @@ app.delete('/users/:user_id', authenticate, async (req, res) => {
   }
 });
 
-// Démarrer le serveur
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

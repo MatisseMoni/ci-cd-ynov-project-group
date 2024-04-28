@@ -1,5 +1,5 @@
 USE ynov_ci;
-CREATE TABLE utilisateur
+CREATE TABLE utilisateurs
 (
     id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     nom VARCHAR(100),

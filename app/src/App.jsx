@@ -13,7 +13,6 @@ import axios from "axios";
 const { REACT_APP_API_URL } = process.env;
 
 function App() {
-  // État initial pour les champs du formulaire et les messages d'erreur
   const userInit = {
     nom: "",
     prenom: "",
@@ -26,13 +25,11 @@ function App() {
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
 
-  // Gestion des changements des champs du formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Gestion de la soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -60,16 +57,37 @@ function App() {
     }
   };
 
-  // Validation des champs ici
   useEffect(() => {
     const v = validateForm(formData);
     setIsFormValid(v.formIsValid);
     setErrors(v.newErrors);
   }, [formData]);
 
-  // Affichage du formulaire
+  const getListsUsersByPassword = async () => {
+    try {
+      const response = await axios.get(`${REACT_APP_API_URL}/users`, {
+        headers: { password: "admin" },
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getUsersByAdminRole = async () => {
+    try {
+      const response = await axios.get(`${REACT_APP_API_URL}/users`, {
+        headers: { admin: true },
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div>
+      <button onClick={getListsUsersByPassword}>Get Lists Users By Password</button>
+      <button onClick={getUsersByAdminRole}>Get Users By Admin Role</button>
       <form data-testid="form" onSubmit={handleSubmit}>
         <div data-testid="divNom">
           <label data-testid="labelNom">Nom:</label>
